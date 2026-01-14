@@ -54,7 +54,6 @@ public class TestJobs2dApp {
         application.addTest("Load secret command", new SelectLoadSecretCommandOptionListener());
 
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
-
     }
 
     /**
@@ -93,6 +92,8 @@ public class TestJobs2dApp {
         DriverFeature.addDriver("Logger + Special line", specialLineWithLoggerDriver);
 
         RecordingDriverDecorator recordingDriver = new RecordingDriverDecorator(basicLineDriver);    // zmienić na czerwoną linię!
+        SelectLoadRecordedCommandOptionListener selectLoadRecordedCommandOptionListener = new SelectLoadRecordedCommandOptionListener(recordingDriver);
+        application.addTest("Stop recording & Load recorded command", selectLoadRecordedCommandOptionListener);
         DriverFeature.addDriver("Recording Driver", recordingDriver);
 
         DriverFeature.updateDriverInfo();
