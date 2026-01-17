@@ -59,6 +59,9 @@ public class TestJobs2dApp {
         application.getFreePanel().addMouseListener(new CanvasMouseListener());
         application.addTest("Load secret command", new SelectLoadSecretCommandOptionListener());
         application.addTest("Run command", new SelectRunCurrentCommandOptionListener(DriverFeature.getDriverManager()));
+        application.addTest("Flip + Run command", new SelectRunCurrentFlippedCommandOptionListener(DriverFeature.getDriverManager()));
+        application.addTest("Rotate 270 + Run command", new SelectRunCurrentRotatedCommandOptionListener(DriverFeature.getDriverManager()));
+        application.addTest("Scale 2.0 + Run command", new SelectRunCurrentScaledCommandOptionListener(DriverFeature.getDriverManager()));
     }
 
     /**
