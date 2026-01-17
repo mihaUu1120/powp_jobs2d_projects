@@ -13,51 +13,31 @@ import edu.kis.powp.jobs2d.drivers.UsageTrackingDriverDecorator;
  * with monitoring enabled from the driver menu, and use this feature to view
  * usage summaries and reset counters.
  */
-public final class MonitoringFeature {
+public class MonitoringFeature implements IFeature {
 
-    /** Holds all registered monitored drivers by their label. */
     private static Map<String, UsageTrackingDriverDecorator> monitoredDrivers = new HashMap<>();
-
-    /** Target logger where summaries are printed. */
     private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-    private MonitoringFeature() {
+    public MonitoringFeature() {
     }
 
-    /**
-     * Sets up the Monitoring menu with actions to report usage and reset counters.
-     * Called once during application startup.
-     *
-     * @param app               The application context.
-     * @param monitoringLogger  Custom logger; if {@code null}, uses the default application logger.
-     */
-    public static void setupMonitoringPlugin(Application app, Logger monitoringLogger) {
-        if (monitoringLogger != null) {
-            logger = monitoringLogger;
+    public MonitoringFeature(Logger customLogger) {
+        if (customLogger != null) {
+            logger = customLogger;
         }
+    }
 
+    @Override
+    public void setup(Application app) {
         app.addComponentMenu(MonitoringFeature.class, "Monitoring", 0);
         app.addComponentMenuElement(MonitoringFeature.class, "Report usage summary", MonitoringFeature::logUsage);
         app.addComponentMenuElement(MonitoringFeature.class, "Reset counters", MonitoringFeature::resetCounters);
     }
 
-    /**
-     * Registers a tracked driver so it can be monitored and reset.
-     *
-     * @param label  The label identifying this driver.
-     * @param driver The tracked driver to register.
-     */
     public static void registerMonitoredDriver(String label, UsageTrackingDriverDecorator driver) {
         monitoredDrivers.put(label, driver);
     }
 
-    /**
-     * Menu action that prints usage summaries for all monitored drivers.
-     * Reports the total travel distance and drawing distance (ink/filament usage)
-     * for each registered driver.
-     *
-     * @param e The action event triggered by the menu selection.
-     */
     private static void logUsage(ActionEvent e) {
         if (monitoredDrivers.isEmpty()) {
             logger.info("Monitoring: no monitored drivers registered");
@@ -71,12 +51,6 @@ public final class MonitoringFeature {
         }
     }
 
-    /**
-     * Menu action that resets usage counters on all monitored drivers.
-     * Sets both travel distance and drawing distance to zero for each.
-     *
-     * @param e The action event triggered by the menu selection.
-     */
     private static void resetCounters(ActionEvent e) {
         if (monitoredDrivers.isEmpty()) {
             logger.info("Monitoring: no monitored drivers registered");
@@ -86,5 +60,10 @@ public final class MonitoringFeature {
             driver.reset();
         }
         logger.info("Monitoring: all counters reset");
+    }
+
+    @Override
+    public String getName() {
+        return "Monitoring";
     }
 }

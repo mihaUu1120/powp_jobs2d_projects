@@ -9,7 +9,16 @@ import edu.kis.powp.jobs2d.canvas.CanvasManager;
 import edu.kis.powp.jobs2d.canvas.ICanvas;
 import edu.kis.powp.jobs2d.events.SelectCanvasOptionListener;
 
-public class CanvasFeature {
+public class CanvasFeature implements IFeature {
+    @Override
+    public void setup(Application app) {
+        setupCanvasPlugin(app);
+    }
+
+    @Override
+    public String getName() {
+        return "Canvas";
+    }
 
     private static CanvasManager canvasManager = new CanvasManager();
     private static CanvasLayerPanel canvasOverlay;

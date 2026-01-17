@@ -27,6 +27,7 @@ import edu.kis.powp.jobs2d.features.CommandsFeature;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 import edu.kis.powp.jobs2d.features.MonitoringFeature;
+import edu.kis.powp.jobs2d.features.FeatureManager;
 
 import edu.kis.powp.jobs2d.drivers.transformation.DriverFeatureFactory;
 import edu.kis.powp.jobs2d.canvas.CanvasFactory;
@@ -188,13 +189,17 @@ public class TestJobs2dApp {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 Application app = new Application("Jobs 2D");
-                DrawerFeature.setupDrawerPlugin(app);
-                CanvasFeature.setupCanvasPlugin(app);
-                CommandsFeature.setupCommandManager();
 
-                DriverFeature.setupDriverPlugin(app);
+                FeatureManager featureManager = new FeatureManager();
+                featureManager.setApplication(app);
+                featureManager.registerFeature(new DrawerFeature());
+                featureManager.registerFeature(new CanvasFeature());
+                featureManager.registerFeature(new CommandsFeature());
+                featureManager.registerFeature(new DriverFeature());
+                featureManager.registerFeature(new MonitoringFeature(logger));
+                featureManager.setupAll();
+
                 setupDrivers(app);
-                MonitoringFeature.setupMonitoringPlugin(app, logger);
                 setupCanvases(app);
                 setupPresetTests(app);
                 setupCommandTests(app);
