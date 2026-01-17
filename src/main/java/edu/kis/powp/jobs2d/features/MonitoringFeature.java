@@ -1,5 +1,6 @@
 package edu.kis.powp.jobs2d.features;
 
+import edu.kis.powp.jobs2d.visitor.VisitableJob2dDriver;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +55,16 @@ public final class MonitoringFeature {
      */
     public static void registerMonitoredDriver(String label, UsageTrackingDriverDecorator driver) {
         monitoredDrivers.put(label, driver);
+    }
+
+    /**
+     * Strategy implementation that wraps a driver with usage tracking
+     * and registers it within this feature.
+     */
+    public static VisitableJob2dDriver driverConfiguration(String name, VisitableJob2dDriver driver) {
+        UsageTrackingDriverDecorator monitoredDriver = new UsageTrackingDriverDecorator(driver, name);
+        registerMonitoredDriver(name, monitoredDriver);
+        return monitoredDriver;
     }
 
     /**

@@ -14,6 +14,7 @@ public class DriverFeature {
     public static DriverManager getDriverManager() {
         return driverManager;
     }
+    private static DriverConfigurationStrategy configStrategy = (name, driver) -> driver;
 
     /**
      * Setup jobs2d drivers Plugin and add to application.
@@ -32,9 +33,9 @@ public class DriverFeature {
      * @param driver VisitableJob2dDriver object.
      */
     public static void addDriver(String name, VisitableJob2dDriver driver) {
-        UsageTrackingDriverDecorator monitoredDriver = new UsageTrackingDriverDecorator(driver, name);
-        MonitoringFeature.registerMonitoredDriver(name, monitoredDriver);
-        SelectDriverMenuOptionListener listener = new SelectDriverMenuOptionListener(monitoredDriver, driverManager);
+        VisitableJob2dDriver finalDriver = configStrategy.configure(name, driver);
+
+        SelectDriverMenuOptionListener listener = new SelectDriverMenuOptionListener(finalDriver, driverManager);
         app.addComponentMenuElement(DriverFeature.class, name, listener);
     }
 
@@ -43,6 +44,10 @@ public class DriverFeature {
      */
     public static void updateDriverInfo() {
         app.updateInfo(driverManager.getCurrentDriver().toString());
+    }
+
+    public static void setConfigurationStrategy(DriverConfigurationStrategy strategy) {
+        configStrategy = strategy;
     }
 
 }

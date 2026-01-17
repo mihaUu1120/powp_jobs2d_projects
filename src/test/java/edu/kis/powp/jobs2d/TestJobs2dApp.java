@@ -30,8 +30,6 @@ import edu.kis.powp.jobs2d.features.MonitoringFeature;
 import edu.kis.powp.jobs2d.drivers.transformation.DriverFeatureFactory;
 import edu.kis.powp.jobs2d.canvas.CanvasFactory;
 
-import edu.kis.powp.jobs2d.drivers.transformation.DriverFeatureFactory;
-
 public class TestJobs2dApp {
     private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
@@ -74,6 +72,8 @@ public class TestJobs2dApp {
      * @param application Application context.
      */
     private static void setupDrivers(Application application) {
+        DriverFeature.setConfigurationStrategy(MonitoringFeature::driverConfiguration);
+
         VisitableJob2dDriver loggerDriver = new LoggerDriver(logger);
         DriverFeature.addDriver("Logger driver", loggerDriver);
 
