@@ -141,6 +141,7 @@ public class TestJobs2dApp {
         CommandsFeature.getDriverCommandManager().getChangePublisher().addSubscriber(windowObserver);
 
         CommandPreviewWindow commandPreviewWindow = new CommandPreviewWindow();
+        commandManager.setPreviewWindow(commandPreviewWindow);
         application.addWindowComponent("Command Preview", commandPreviewWindow);
         CommandPreviewWindowObserver previewObserver = new CommandPreviewWindowObserver(
                 commandPreviewWindow, 
