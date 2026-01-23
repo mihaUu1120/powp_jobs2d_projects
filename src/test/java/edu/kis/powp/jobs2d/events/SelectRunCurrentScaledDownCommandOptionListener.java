@@ -9,19 +9,19 @@ import edu.kis.powp.jobs2d.visitor.CommandTransformerVisitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SelectRunCurrentScaledCommandOptionListener implements ActionListener {
+public class SelectRunCurrentScaledDownCommandOptionListener implements ActionListener {
     private DriverManager driverManager;
 
-    public SelectRunCurrentScaledCommandOptionListener(DriverManager driverManager) {
+    public SelectRunCurrentScaledDownCommandOptionListener(DriverManager driverManager) {
         this.driverManager = driverManager;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         DriverCommand command = CommandsFeature.getDriverCommandManager().getCurrentCommand();
-        CommandTransformerVisitor scaler = new CommandTransformerVisitor(new ScaleStrategy(2.0, 2.0));
+        CommandTransformerVisitor scaler = new CommandTransformerVisitor(new ScaleStrategy(0.5, 0.5));
         command.accept(scaler);
         DriverCommand command_scaled = scaler.getTransformedCommand();
-        command_scaled.execute(driverManager.getCurrentDriver());
+        CommandsFeature.getDriverCommandManager().setCurrentCommand(command_scaled);
     }
 }

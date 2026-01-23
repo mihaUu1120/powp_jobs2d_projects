@@ -19,9 +19,9 @@ public class SelectRunCurrentRotatedCommandOptionListener implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         DriverCommand command = CommandsFeature.getDriverCommandManager().getCurrentCommand();
-        CommandTransformerVisitor scaler = new CommandTransformerVisitor(new RotateStrategy(270));
+        CommandTransformerVisitor scaler = new CommandTransformerVisitor(new RotateStrategy(90));
         command.accept(scaler);
         DriverCommand command_rotated = scaler.getTransformedCommand();
-        command_rotated.execute(driverManager.getCurrentDriver());
+        CommandsFeature.getDriverCommandManager().setCurrentCommand(command_rotated);
     }
 }
