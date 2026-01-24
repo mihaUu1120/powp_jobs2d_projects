@@ -7,6 +7,7 @@ import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.AnimatedDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.DriverComposite;
 import edu.kis.powp.jobs2d.drivers.LoggerDriver;
+import edu.kis.powp.jobs2d.drivers.RecordingDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.drivers.transformation.TransformerDriverDecorator;
 import edu.kis.powp.jobs2d.drivers.UsageTrackingDriverDecorator;
@@ -70,5 +71,12 @@ public class DriverDeepCopyVisitor implements DriverVisitor {
         usageTrackingDriverDecorator.getDelegate().accept(this);
         VisitableJob2dDriver targetCopy = copy;
         copy = new UsageTrackingDriverDecorator(targetCopy, usageTrackingDriverDecorator.getLabel());
+    }
+
+    @Override
+    public void visit(RecordingDriverDecorator recordingDriverDecorator) {
+        recordingDriverDecorator.getDelegate().accept(this);
+        VisitableJob2dDriver targetCopy = copy;
+        copy = new RecordingDriverDecorator(targetCopy);
     }
 }

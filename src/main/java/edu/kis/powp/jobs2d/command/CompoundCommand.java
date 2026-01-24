@@ -181,6 +181,13 @@ public class CompoundCommand implements ICompoundCommand {
         public CompoundCommand build() {
             return new CompoundCommand(commands, name);
         }
+
+        /**
+         * Clears all commands from the builder (reset builder).
+         */
+        public void clear() {
+            commands.clear();
+        }
     }
 
     /**

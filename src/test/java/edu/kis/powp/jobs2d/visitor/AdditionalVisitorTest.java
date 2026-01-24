@@ -1,6 +1,5 @@
 package edu.kis.powp.jobs2d.visitor;
 
-import edu.kis.powp.jobs2d.Job2dDriver;
 import edu.kis.powp.jobs2d.drivers.LoggerDriver;
 import edu.kis.powp.jobs2d.drivers.UsageTrackingDriverDecorator;
 
@@ -15,10 +14,11 @@ public class AdditionalVisitorTest {
         System.out.println("Testing UsageTracking Counting...");
         LoggerDriver logger = new LoggerDriver();
         UsageTrackingDriverDecorator tracked = new UsageTrackingDriverDecorator(logger, "tracked");
-        
+
         DriverCounterVisitor.DriverStats stats = DriverCounterVisitor.countDrivers(tracked);
         if (stats.getUsageTrackingDriverDecoratorCount() != 1) {
-            throw new RuntimeException("Expected 1 usage tracking driver, got " + stats.getUsageTrackingDriverDecoratorCount());
+            throw new RuntimeException(
+                    "Expected 1 usage tracking driver, got " + stats.getUsageTrackingDriverDecoratorCount());
         }
         System.out.println("Counting OK");
     }
@@ -27,7 +27,7 @@ public class AdditionalVisitorTest {
         System.out.println("Testing UsageTracking Deep Copy...");
         LoggerDriver logger = new LoggerDriver();
         UsageTrackingDriverDecorator tracked = new UsageTrackingDriverDecorator(logger, "tracked");
-        
+
         DriverDeepCopyVisitor visitor = new DriverDeepCopyVisitor();
         tracked.accept(visitor);
         VisitableJob2dDriver copy = visitor.getCopy();
@@ -48,4 +48,3 @@ public class AdditionalVisitorTest {
         System.out.println("Deep Copy OK");
     }
 }
-

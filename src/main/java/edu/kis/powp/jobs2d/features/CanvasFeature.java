@@ -25,7 +25,10 @@ public class CanvasFeature {
 
     public static void setupCanvasPlugin(Application app) {
         CanvasFeature.app = app;
-        JPanel panel = app.getFreePanel();
+        JPanel panel = ViewFeature.getDrawingPanel();
+        if (panel == null) {
+            panel = app.getFreePanel();
+        }
         // OverlayLayout is used to add the canvas overlay on top of the drawing panel
         // so changing the canvas will not affect the drawing panel
         panel.setLayout(new OverlayLayout(panel));
