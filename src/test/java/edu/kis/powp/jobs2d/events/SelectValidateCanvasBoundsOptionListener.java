@@ -55,7 +55,6 @@ public class SelectValidateCanvasBoundsOptionListener implements ActionListener 
                 result.getViolations().stream()
                     .filter(v -> v.getType() == BoundsViolation.ViolationType.CANVAS_EXCEEDED)
                     .forEach(v -> logger.severe("  - " + v.toString()));
-                logger.warning("");
             }
             
             if (result.hasMarginViolations()) {

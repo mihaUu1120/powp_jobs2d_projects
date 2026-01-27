@@ -18,8 +18,8 @@ import edu.kis.powp.jobs2d.drivers.adapter.LineDriverAdapter;
 import edu.kis.powp.jobs2d.drivers.transformation.ScaleStrategy;
 import edu.kis.powp.jobs2d.drivers.transformation.TransformerDriverDecorator;
 import edu.kis.powp.jobs2d.features.CanvasFeature;
-import edu.kis.powp.jobs2d.visitor.CanvasBoundsCheckVisitor;
 import edu.kis.powp.jobs2d.canvas.ICanvas;
+import edu.kis.powp.jobs2d.visitor.CanvasBoundsCheckVisitor;
 
 public class CommandPreviewWindow extends JFrame implements WindowComponent {
     
@@ -32,7 +32,10 @@ public class CommandPreviewWindow extends JFrame implements WindowComponent {
 
     private final JLabel statusLabel;
     private final LineDriverAdapter driver;
-    private final TransformerDriverDecorator scaledDriver;   
+    private final TransformerDriverDecorator scaledDriver;
+    
+    private final CommandValidator commandValidator;
+    private final ValidationStatusUpdater statusUpdater;   
 
     public CommandPreviewWindow() {
         this.setTitle("Command Preview");
@@ -62,6 +65,9 @@ public class CommandPreviewWindow extends JFrame implements WindowComponent {
 
         this.driver = new LineDriverAdapter(drawPanelController, LineFactory.getBasicLine(), "preview");
         this.scaledDriver = new TransformerDriverDecorator(driver, previewScaleStrategy);
+        
+        this.commandValidator = new CommandValidator();
+        this.statusUpdater = new ValidationStatusUpdater();
     }
 
     public void updatePreview(DriverCommand command) {
@@ -72,16 +78,8 @@ public class CommandPreviewWindow extends JFrame implements WindowComponent {
         if (command != null) {
             ICanvas canvas = CanvasFeature.getCanvasManager().getCurrentCanvas();
             if (canvas != null) {
-                CanvasBoundsCheckVisitor.BoundsCheckResult result =
-                        CanvasBoundsCheckVisitor.checkCanvasAndMargins(command, canvas, canvas.getMargin());
-
-                if (result.hasCanvasViolations()) {
-                    statusLabel.setText("Warning: Command exceeds canvas boundaries!");
-                    statusLabel.setForeground(Color.RED);
-                } else if (result.hasMarginViolations()) {
-                    statusLabel.setText("Warning: Command exceeds canvas margin!");
-                    statusLabel.setForeground(Color.RED);
-                }
+                CanvasBoundsCheckVisitor.BoundsCheckResult validationResult = commandValidator.validate(command, canvas);
+                statusUpdater.updateStatus(statusLabel, validationResult);
                 command.execute(scaledDriver);
             }
         }
