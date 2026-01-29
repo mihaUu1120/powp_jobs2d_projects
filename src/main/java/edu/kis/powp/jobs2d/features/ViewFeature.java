@@ -1,32 +1,42 @@
 package edu.kis.powp.jobs2d.features;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
+
 import edu.kis.powp.appbase.Application;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
- * Feature for managing view transformations (zoom and pan).
- * This feature wraps the drawing panel to apply transformations.
+ * Feature for managing view transformations (zoom and pan). This feature wraps
+ * the drawing panel to apply transformations.
  * 
  * Panning: Hold CTRL + Right Mouse Button and drag
  */
-public class ViewFeature {
+public class ViewFeature implements IFeature {
 
     private static ViewTransformPanel controlPanel;
     private static JPanel transformedPanel;
     private static Application app;
 
+    @Override
+    public void setup(Application app) {
+        setupViewPlugin(app);
+    }
+
     /**
-     * Setup View Feature Plugin and add to application.
-     * Must be called Before DrawerFeature and CanvasFeature.
+     * Setup View Feature Plugin and add to application. Must be called Before
+     * DrawerFeature and CanvasFeature.
      * 
      * @param application Application context.
      */
     public static void setupViewPlugin(Application application) {
         app = application;
         JPanel freePanel = app.getFreePanel();
-        
+
         // Create a custom panel that will be transformed
         transformedPanel = new JPanel() {
             @Override
@@ -35,25 +45,25 @@ public class ViewFeature {
                     super.paint(g);
                     return;
                 }
-                
+
                 Graphics2D g2d = (Graphics2D) g.create();
-                
+
                 // Apply transformations
                 double scale = controlPanel.getScale();
                 double tx = controlPanel.getTranslateX();
                 double ty = controlPanel.getTranslateY();
-                
+
                 int centerX = getWidth() / 2;
                 int centerY = getHeight() / 2;
-                
+
                 g2d.translate(centerX + tx, centerY + ty);
                 g2d.scale(scale, scale);
                 g2d.translate(-centerX, -centerY);
-                
+
                 // Draw large white background in transformed space behind everything
                 g2d.setColor(Color.WHITE);
                 g2d.fillRect(-10000, -10000, 20000, 20000);
-                
+
                 // Paint everything with transformation
                 super.paint(g2d);
                 g2d.dispose();
@@ -62,16 +72,16 @@ public class ViewFeature {
         transformedPanel.setOpaque(true);
         transformedPanel.setBackground(Color.WHITE);
         transformedPanel.setLayout(new OverlayLayout(transformedPanel));
-        
+
         // Replace free panel content with our transformed panel
         freePanel.removeAll();
         freePanel.setLayout(new BorderLayout());
         freePanel.add(transformedPanel, BorderLayout.CENTER);
-        
+
         // Create transparent control panel for mouse input
         controlPanel = new ViewTransformPanel();
         transformedPanel.add(controlPanel);
-        
+
         // Add View menu
         app.addComponentMenu(ViewFeature.class, "View");
     }
@@ -84,10 +94,10 @@ public class ViewFeature {
     public static JPanel getDrawingPanel() {
         return transformedPanel;
     }
-    
+
     /**
-     * Add a mouse listener that will receive left button events on the control panel.
-     * This is used for drawing operations.
+     * Add a mouse listener that will receive left button events on the control
+     * panel. This is used for drawing operations.
      */
     public static void addMouseListenerToControlPanel(java.awt.event.MouseListener listener) {
         if (controlPanel != null) {
@@ -121,5 +131,10 @@ public class ViewFeature {
             controlPanel.resetView();
         }
     }
-}
 
+    @Override
+    public String getName() {
+        return "View";
+    }
+
+}
